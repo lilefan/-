@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>红楼梦人物关系图谱</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "SF Pro SC", "SF Pro Text", "SF Pro Icons", "PingFang SC", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+        }
+
+        body {
+            background: #000;
+            color: #fff;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .title {
+            font-size: 56px;
+            font-weight: 600;
+            background: linear-gradient(90deg, #ff6b6b, #ff8e8e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+
+        .subtitle {
+            font-size: 24px;
+            color: #86868b;
+        }
+
+        #relationship-map {
+            width: 100%;
+            height: 800px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            margin-bottom: 40px;
+        }
+
+        .poems {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+        }
+
+        .poem {
+            margin-bottom: 30px;
+        }
+
+        .poem-title {
+            font-size: 20px;
+            color: #ff8e8e;
+            margin-bottom: 10px;
+        }
+
+        .poem-content {
+            color: #ddd;
+            line-height: 1.8;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">红楼梦人物关系图谱</h1>
+            <p class="subtitle">探索贾史王薛四大家族的错综复杂关系</p>
+        </div>
+        <div id="relationship-map"></div>
+        <div class="poems">
+            <div class="poem">
+                <h3 class="poem-title">林黛玉、薛宝钗判词</h3>
+                <p class="poem-content">可叹停机德，堪怜咏絮才。玉带林中挂，金簪雪里埋。</p>
+            </div>
+            <div class="poem">
+                <h3 class="poem-title">贾元春判词</h3>
+                <p class="poem-content">二十年来辨是非，榴花开处照宫闱。三春争及初春景，虎兕相逢大梦归。</p>
+            </div>
+            <div class="poem">
+                <h3 class="poem-title">贾探春判词</h3>
+                <p class="poem-content">才自精明志自高，生于末世运偏消。清明涕送江边望，千里东风一梦遥。</p>
+            </div>
+            <div class="poem">
+                <h3 class="poem-title">史湘云判词</h3>
+                <p class="poem-content">富贵又何为，襁褓之间父母违。展眼吊斜晖，湘江水逝楚云飞。</p>
+            </div>
+            <div class="poem">
+                <h3 class="poem-title">妙玉判词</h3>
+                <p class="poem-content">欲洁何曾洁，云空未必空。可怜金玉质，终陷淖泥中。</p>
+            </div>
+            <div class="poem">
+                <h3 class="poem-title">贾迎春判词</h3>
+                <p class="poem-content">子系中山狼，得志便猖狂。金闺花柳质，一载赴黄粱。</p>
+            </div>
+            <div class="poem">
+                <h3 class="poem-title">贾惜春判词</h3>
+                <p class="poem-content">勘破三春景不长，缁衣顿改昔年妆。可怜绣户侯门女，独卧青灯古佛旁。</p>
+            </div>
+            <div class="poem">
+                <h3 class="poem-title">王熙凤判词</h3>
+                <p class="poem-content">凡鸟偏从末世来，都知爱慕此生才。一从二令三人木，哭向金陵事更哀。</p>
+            </div>
+            <div class="poem">
+                <h3 class="poem-title">贾巧姐判词</h3>
+                <p class="poem-content">势败休云贵，家亡莫论亲。偶因济刘氏，巧得遇恩人。</p>
+            </div>
+            <div class="poem">
+                <h3 class="poem-title">李纨判词</h3>
+                <p class="poem-content">桃李春风结子完，到头谁似一盆兰。如冰水好空相妒，枉与他人作笑谈。</p>
+            </div>
+            <div class="poem">
+                <h3 class="poem-title">秦可卿判词</h3>
+                <p class="poem-content">情天情海幻情身，情既相逢必主淫。漫言不肖皆荣出，造衅开端实在宁。</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const chart = echarts.init(document.getElementById('relationship-map'));
+        
+        const categories = [
+            { name: '贾府-宁国府' },
+            { name: '贾府-荣国府' },
+            { name: '史家' },
+            { name: '王家' },
+            { name: '薛家' },
+            { name: '丫鬟/下人' }
+        ];
+
+        const characterInfo = {
+            // 宁国府
+            '贾演': '初代宁国公，凭军功建立家业，有勇有谋，有领导才能\n典型事件：开国封爵',
+            '贾代化': '承继父业，有传统家族观念\n典型事件：文中未提及主要事件',
+            '贾敬': '痴迷炼丹，不理世事，逃避现实，追求长生\n典型事件：沉迷炼丹',
+            '贾珍': '宁国府当家，行事荒淫，生活奢靡，不务正业\n典型事件：秦可卿葬礼大操大办',
+            '尤氏': '性格懦弱，为人圆滑，维持家族秩序\n典型事件：处理贾珍的风流韵事',
+            '贾蓉': '年轻浪荡，不学无术，倚仗家族权势\n典型事件：参与秦可卿葬礼',
+            '贾蔷': '善于钻营，有纨绔子弟习性\n典型事件：文中未提及主要事件',
+            '秦可卿': '身世成谜，与公公不伦，命运悲惨',
+            '贾惜春': '性格孤僻冷漠，看透世事，最终出家\n典型事件：撵走王熙凤同意的入画',
+            
+            // 荣国府
+            '贾源': '初代荣国公，功勋显赫，果敢有谋略\n典型事件：开国封爵',
+            '贾代善': '有才能和威望，深受贾母敬重\n典型事件：文中未提及主要事件',
+            '贾母': '精明能干，善处家务，疼爱晚辈，有威严\n典型事件：组织大型家族聚会',
+            '贾赦': '贪婪好色，不择手段，对子女缺乏关爱\n典型事件：为几把古扇逼迫石呆子',
+            '邢夫人': '愚钝固执，顺从贾赦，为人刻薄\n典型事件：替贾赦讨要鸳鸯做妾',
+            '贾政': '迂腐古板，尊崇礼教，对子女要求严格\n典型事件：笞挞贾宝玉',
+            '王夫人': '表面吃斋念佛，实则心狠手辣，过度保护宝玉\n典型事件：抄检大观园',
+            '贾琏': '精明能干但好色多情，处理家务有能力\n典型事件：偷娶尤二姐',
+            '王熙凤': '精明强干，泼辣狠毒，善于权谋，管家有方\n典型事件：毒设相思局、协理宁国府',
+            '贾宝玉': '叛逆多情，反对礼教，尊重女性，优柔寡断\n典型事件：梦游太虚幻境',
+            '贾环': '心胸狭隘，自卑嫉妒，性格扭曲\n典型事件：故意推倒烛台烫伤宝玉',
+            '探春': '精明能干，有决断力，自尊心强，不甘人后\n典型事件：兴利除宿弊、代理管家',
+            '贾敏': '才情修养俱佳，深受贾母疼爱\n典型事件：文中未提及主要事件',
+            '林如海': '饱读诗书，为人正直，有文人气质\n典型事件：托付林黛玉给贾母',
+            '林黛玉': '敏感细腻，多愁善感，才情极高，孤傲清高\n典型事件：葬花、重建桃花社',
+            
+            // 史家
+            '史湘云': '性格豪爽，乐观豁达，才情出众，不拘小节\n典型事件：醉卧芍药裀',
+            
+            // 王家
+            '王子腾': '官场得意，善于钻营，是家族重要支柱\n典型事件：官场升迁',
+            '平儿': '王熙凤陪嫁丫鬟，圆滑能干，善解人意',
+            
+            // 薛家
+            '薛姨妈': '性格随和，懦弱缺乏主见，疼爱子女\n典型事件：促成金玉良缘',
+            '薛蟠': '不学无术，骄横跋扈，愚蠢鲁莽，典型纨绔\n典型事件：打死冯渊，强买香菱',
+            '薛宝钗': '端庄稳重，博学多才，处世圆滑，略显冷漠\n典型事件：扑蝶、劝宝玉读书',
+            '薛宝琴': '年轻貌美，性格开朗，才华横溢，见多识广\n典型事件：作怀古诗',
+            '薛蝌': '稳重老实，有责任感，较为靠谱\n典型事件：文中未提及主要事件',
+            '夏金桂': '泼辣狠毒，嫉妒心强，搅乱薛家\n典型事件：大闹薛家',
+            
+            // 丫鬟
+            '袭人': '温柔体贴，暗慕宝玉，善解人意',
+            '晴雯': '傲骨铮铮，性格刚烈，遭人陷害',
+            '茗烟': '机灵活泼，忠于宝玉，伺候周到'
+        };
+
+        const data = [
+            // 宁国府
+            { name: '贾演', symbolSize: 45, category: 0, desc: characterInfo['贾演'] },
+            { name: '贾代化', symbolSize: 45, category: 0, desc: characterInfo['贾代化'] },
+            { name: '贾敬', symbolSize: 45, category: 0, desc: characterInfo['贾敬'] },
+            { name: '贾珍', symbolSize: 50, category: 0, desc: characterInfo['贾珍'] },
+            { name: '尤氏', symbolSize: 40, category: 0, desc: characterInfo['尤氏'] },
+            { name: '贾蓉', symbolSize: 40, category: 0, desc: characterInfo['贾蓉'] },
+            { name: '贾蔷', symbolSize: 35, category: 0, desc: characterInfo['贾蔷'] },
+            { name: '秦可卿', symbolSize: 45, category: 0, desc: characterInfo['秦可卿'] },
+            { name: '贾惜春', symbolSize: 40, category: 0, desc: characterInfo['贾惜春'] },
+            
+            // 荣国府
+            { name: '贾源', symbolSize: 45, category: 1, desc: characterInfo['贾源'] },
+            { name: '贾代善', symbolSize: 45, category: 1, desc: characterInfo['贾代善'] },
+            { name: '贾母', symbolSize: 70, category: 1, desc: characterInfo['贾母'] },
+            { name: '贾赦', symbolSize: 50, category: 1, desc: characterInfo['贾赦'] },
+            { name: '邢夫人', symbolSize: 45, category: 1, desc: characterInfo['邢夫人'] },
+            { name: '贾政', symbolSize: 55, category: 1, desc: characterInfo['贾政'] },
+            { name: '王夫人', symbolSize: 55, category: 1, desc: characterInfo['王夫人'] },
+            { name: '贾琏', symbolSize: 50, category: 1, desc: characterInfo['贾琏'] },
+            { name: '王熙凤', symbolSize: 60, category: 1, desc: characterInfo['王熙凤'] },
+            { name: '贾宝玉', symbolSize: 65, category: 1, desc: characterInfo['贾宝玉'] },
+            { name: '贾环', symbolSize: 40, category: 1, desc: characterInfo['贾环'] },
+            { name: '探春', symbolSize: 45, category: 1, desc: characterInfo['探春'] },
+            { name: '贾敏', symbolSize: 45, category: 1, desc: characterInfo['贾敏'] },
+            { name: '林如海', symbolSize: 45, category: 1, desc: characterInfo['林如海'] },
+            { name: '林黛玉', symbolSize: 65, category: 1, desc: characterInfo['林黛玉'] },
+            
+            // 史家
+            { name: '史湘云', symbolSize: 50, category: 2, desc: characterInfo['史湘云'] },
+            
+            // 王家
+            { name: '王子腾', symbolSize: 50, category: 3, desc: characterInfo['王子腾'] },
+            { name: '平儿', symbolSize: 40, category: 3, desc: characterInfo['平儿'] },
+            
+            // 薛家
+            { name: '薛姨妈', symbolSize: 50, category: 4, desc: characterInfo['薛姨妈'] },
+            { name: '薛蟠', symbolSize: 45, category: 4, desc: characterInfo['薛蟠'] },
+            { name: '薛宝钗', symbolSize: 60, category: 4, desc: characterInfo['薛宝钗'] },
+            { name: '薛宝琴', symbolSize: 45, category: 4, desc: characterInfo['薛宝琴'] },
+            { name: '薛蝌', symbolSize: 40, category: 4, desc: characterInfo['薛蝌'] },
+            { name: '夏金桂', symbolSize: 40, category: 4, desc: characterInfo['夏金桂'] },
+            
+            // 丫鬟/下人
+            { name: '袭人', symbolSize: 45, category: 5, desc: characterInfo['袭人'] },
+            { name: '晴雯', symbolSize: 45, category: 5, desc: characterInfo['晴雯'] },
+            { name: '茗烟', symbolSize: 40, category: 5, desc: characterInfo['茗烟'] }
+        ];
+
+        const links = [
+            // 宁国府世系
+            { source: '贾演', target: '贾代化', value: '父子' },
+            { source: '贾代化', target: '贾敬', value: '父子' },
+            { source: '贾敬', target: '贾珍', value: '父子' },
+            { source: '贾珍', target: '贾蓉', value: '父子' },
+            { source: '贾珍', target: '贾蔷', value: '父子' },
+            { source: '贾珍', target: '尤氏', value: '夫妻' },
+            { source: '贾珍', target: '秦可卿', value: '公媳/暧昧' },
+            { source: '贾蓉', target: '秦可卿', value: '夫妻' },
+            { source: '贾敬', target: '贾惜春', value: '父女' },
+            
+            // 荣国府世系
+            { source: '贾源', target: '贾代善', value: '父子' },
+            { source: '贾代善', target: '贾母', value: '夫妻' },
+            { source: '贾代善', target: '贾赦', value: '父子' },
+            { source: '贾代善', target: '贾政', value: '父子' },
+            { source: '贾代善', target: '贾敏', value: '父女' },
+            { source: '贾赦', target: '邢夫人', value: '夫妻' },
+            { source: '贾赦', target: '贾琏', value: '父子' },
+            { source: '贾政', target: '王夫人', value: '夫妻' },
+            { source: '贾政', target: '贾宝玉', value: '父子/矛盾' },
+            { source: '贾政', target: '贾环', value: '父子' },
+            { source: '贾政', target: '探春', value: '父女' },
+            { source: '贾敏', target: '林如海', value: '夫妻' },
+            { source: '林如海', target: '林黛玉', value: '父女' },
+            
+            // 姻亲关系
+            { source: '贾琏', target: '王熙凤', value: '夫妻' },
+            { source: '贾宝玉', target: '薛宝钗', value: '夫妻' },
+            { source: '贾宝玉', target: '林黛玉', value: '表兄妹/暗恋' },
+            { source: '王夫人', target: '薛姨妈', value: '姐妹' },
+            { source: '薛蟠', target: '夏金桂', value: '夫妻' },
+            
+            // 主仆关系
+            { source: '王熙凤', target: '平儿', value: '主仆/知己' },
+            { source: '贾宝玉', target: '袭人', value: '主仆/暧昧' },
+            { source: '贾宝玉', target: '晴雯', value: '主仆/怜惜' },
+            { source: '贾宝玉', target: '茗烟', value: '主仆' },
+            
+            // 朋友关系
+            { source: '史湘云', target: '薛宝钗', value: '闺中密友' },
+            { source: '史湘云', target: '林黛玉', value: '闺中密友' },
+            { source: '薛宝钗', target: '林黛玉', value: '闺中密友/情敌' },
+            { source: '薛宝钗', target: '薛宝琴', value: '姐妹' },
+            { source: '薛蟠', target: '薛蝌', value: '兄弟' },
+            
+            // 权力关系
+            { source: '王子腾', target: '王夫人', value: '兄妹' },
+            { source: '王夫人', target: '王熙凤', value: '姑侄/同盟' },
+            { source: '邢夫人', target: '王熙凤', value: '婆媳/矛盾' }
+        ];
+
+        const option = {
+            title: {
+                text: '',
+                subtext: '',
+                top: 'top',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: function (params) {
+                    if (params.dataType === 'edge') {
+                        return `${params.data.source} 与 ${params.data.target}: ${params.data.value}`;
+                    }
+                    return `${params.data.name}<br/>${params.data.desc || ''}`;
+                }
+            },
+            legend: {
+                data: categories.map(a => a.name),
+                textStyle: {
+                    color: '#fff'
+                },
+                top: 20
+            },
+            animationDurationUpdate: 1500,
+            animationEasingUpdate: 'quinticInOut',
+            series: [{
+                type: 'graph',
+                layout: 'force',
+                data: data,
+                links: links,
+                categories: categories,
+                roam: true,
+                label: {
+                    show: true,
+                    position: 'right',
+                    formatter: '{b}',
+                    color: '#fff'
+                },
+                force: {
+                    repulsion: 400,
+                    edgeLength: 200
+                },
+                lineStyle: {
+                    color: 'source',
+                    curveness: 0.3,
+                    width: 2
+                },
+                emphasis: {
+                    focus: 'adjacency',
+                    lineStyle: {
+                        width: 10
+                    }
+                }
+            }]
+        };
+
+        chart.setOption(option);
+        window.addEventListener('resize', () => chart.resize());
+    </script>
+</body>
+</html>
